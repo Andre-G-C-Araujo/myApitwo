@@ -1,6 +1,7 @@
 const { hash, compare } = require("bcryptjs");
 const sqliteConnection = require("../database/sqlite");
 const AppError = require("../utils/AppError");
+const validator = require("email-validator");
 
 class UserController {
   async create(req, res) {
@@ -11,6 +12,10 @@ class UserController {
       "SELECT * FROM users WHERE email = (?)",
       [email]
     );
+
+    if (!validator.validate(email)) {
+      throw new AppError("Email invalido, tente um que seja valído");
+    }
 
     if (checkUsersExist) {
       throw new AppError("Esse email ja existe");
