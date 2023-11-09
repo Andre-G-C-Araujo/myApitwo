@@ -5,7 +5,7 @@ class MoviesTagsController {
     const user_id = req.params;
     console.log(user_id.id);
 
-    const moviesTagShow = await knex("movies-tags").where({
+    const moviesTagShow = await knex("movies_tags").where({
       user_id: user_id.id,
     });
 
