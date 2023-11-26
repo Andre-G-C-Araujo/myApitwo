@@ -14,7 +14,7 @@ class MoviesNotesController {
       user_id,
     });
 
-    const [tagsMoviesInsert] = movies_tags.map((name) => {
+    const tagsMoviesInsert = movies_tags.map((name) => {
       return {
         note_id,
         name,
@@ -49,7 +49,7 @@ class MoviesNotesController {
   }
 
   async index(req, res) {
-    const { title, movies_tags } = req.query;
+    const { title, movies_tags, rating } = req.query;
 
     const user_id = req.user.id;
 
@@ -57,13 +57,15 @@ class MoviesNotesController {
 
     if (movies_tags) {
       const filterTags = movies_tags.split(",").map((tag) => tag.trim());
-      console.log(filterTags);
+      // console.log(filterTags);
 
       notes = await knex("movies_tags")
         .select([
           "movies_notes.id",
           "movies_notes.title",
           "movies_notes.user_id",
+          "movies_notes.rating",
+          "movies_notes.description",
         ])
         .where("movies_notes.user_id", user_id)
         .whereLike("movies_notes.title", `%${title}%`)
