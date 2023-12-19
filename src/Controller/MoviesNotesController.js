@@ -49,7 +49,7 @@ class MoviesNotesController {
   }
 
   async index(req, res) {
-    const { title, movies_tags, rating } = req.query;
+    const { title, movies_tags } = req.query;
 
     const user_id = req.user.id;
 
@@ -68,11 +68,10 @@ class MoviesNotesController {
           "movies_notes.description",
         ])
         .where("movies_notes.user_id", user_id)
-        .whereLike("movies_notes.title", `%${title}%`)
-        .whereIn("name", filterTags)
-        .innerJoin("movies_notes", "movies_notes.id", "movies_tags.note_id")
-        .orderBy("movies_notes.title");
-    } else {
+        .whereLike("movies_notes.title", `%${title}%`) // acredito que aqui tem que pegar da tags.
+        .whereIn("name", filterTags) // whereILike é case-insensitive
+        .innerJoin("movies_notes", "movies_notes.id", "movies_tags.note_id") // se isso dar certo, verificar o search no front
+        .orderBy("movies_notes.title"); // a funçao em cima inneJoin tem como funcionalidade encontrar o mesmo dados em tabelas diferentes
       notes = await knex("movies_notes")
         .where({ user_id })
         .whereLike("title", `%${title}%`)
